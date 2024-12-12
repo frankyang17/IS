@@ -17,7 +17,10 @@
 #' "
 #' create_word(code, 'report.docx')
 create_word <- function(code, output_path = "report.docx") {
-  # 1. 將代碼保存到臨時的 Rmarkdown 文件
+  # 1. 將代碼中的單引號和雙引號處理為可兼容格式
+  code <- gsub("'", "\"", code)  # 將單引號替換為雙引號
+
+  # 2. 將代碼保存到臨時的 Rmarkdown 文件
   temp_rmd <- tempfile(fileext = ".Rmd")
   rmd_content <- paste0(
     "---\n",
@@ -30,7 +33,7 @@ create_word <- function(code, output_path = "report.docx") {
   )
   writeLines(rmd_content, temp_rmd)
 
-  # 2. 使用 rmarkdown::render() 生成 Word 文件
+  # 3. 使用 rmarkdown::render() 生成 Word 文件
   output_path <- normalizePath(output_path, mustWork = FALSE)
   rmarkdown::render(temp_rmd, output_file = output_path)
 
